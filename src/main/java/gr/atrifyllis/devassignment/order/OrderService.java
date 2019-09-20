@@ -15,4 +15,8 @@ class OrderService {
     List<PlacedOrder> findAll() {
         return this.orderRepository.findAll();
     }
+
+    PlacedOrder create(PlacedOrder order) {
+        return this.orderRepository.save(order);
+    }
 }

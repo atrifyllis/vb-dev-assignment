@@ -7,6 +7,7 @@ import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Builder(toBuilder = true)
@@ -28,9 +29,12 @@ public class PlacedOrder {
     @Setter(AccessLevel.PRIVATE)
     private BigDecimal orderPrice;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "product_id")
-    private List<Product> products;
+    @ManyToMany
+    @JoinTable(name = "order_product",
+            joinColumns = @JoinColumn(name = "order_id"),
+            inverseJoinColumns = @JoinColumn(name = "product_id")
+    )
+    private Set<Product> products;
 
     /**
      * This method should be called only on save and never again.
