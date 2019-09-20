@@ -1,8 +1,6 @@
 package gr.atrifyllis.devassignment;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -32,39 +30,75 @@ class ProductController {
         this.productService = productService;
     }
 
+    /**
+     * Retrieve all products.
+     *
+     * @return the list of Product details.
+     */
     @GetMapping("/products")
     List<Product> getProducts() {
+        Product test = new Product(1L, "test", BigDecimal.ZERO);
         return this.productService.findAll();
     }
 }
 
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
+/**
+ * The product details.
+ */
 @Entity
+@Builder(toBuilder = true)
+@AllArgsConstructor(access = AccessLevel.PACKAGE)
+@NoArgsConstructor(access = AccessLevel.PACKAGE)
+@Setter(value = AccessLevel.PACKAGE)
+@Getter
 class Product {
 
+    /**
+     * The database id of the product.
+     */
     @Id
+    @GeneratedValue
+    @Setter(AccessLevel.PRIVATE)
     private Long id;
+
+    /**
+     * The name of the product.
+     */
     private String name;
+
+    /**
+     * The price of the product.
+     */
     private BigDecimal price;
 }
 
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
 @Entity
+@Builder(toBuilder = true)
+@AllArgsConstructor(access = AccessLevel.PACKAGE)
+@NoArgsConstructor(access = AccessLevel.PACKAGE)
+@Setter(value = AccessLevel.PACKAGE)
+@Getter
 class PlacedOrder {
     @Id
+    @GeneratedValue
+    @Setter(AccessLevel.PRIVATE)
     private Long id;
+
     private String buyer;
+
     private LocalDateTime placedAt;
+
+    @javax.persistence.Column(updatable = false) // TODO check if this extra precaution is needed
+    @Setter(AccessLevel.PRIVATE)
     private BigDecimal orderPrice;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "product_id")
     private List<Product> products;
 
+    /**
+     * This method should be called only on save and never again.
+     */
     private void calculateTotal() {
         this.orderPrice = this.products.stream()
                 .map(Product::getPrice)
@@ -91,6 +125,10 @@ class ProductService {
 
     List<Product> findAll() {
         return this.productRepository.findAll();
+    }
+
+    Product create(Product p) {
+        return this.productRepository.save(p);
     }
 }
 

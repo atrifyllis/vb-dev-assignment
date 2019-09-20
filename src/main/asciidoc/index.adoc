@@ -1,0 +1,16 @@
+= Dev Assignment Documentation
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toc-title: Index
+:toclevels: 4
+:sectlinks:
+
+
+ifndef::snippets[]
+:snippets: ../../../target/generated-snippets
+endif::[]
+
+
+include::{snippets}/dev-assignment-application-tests/should-return-product-list/auto-section.adoc[]
