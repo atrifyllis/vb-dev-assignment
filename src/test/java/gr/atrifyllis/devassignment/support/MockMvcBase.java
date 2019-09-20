@@ -23,9 +23,13 @@ import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.docu
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
 
+/**
+ * Base class for all Integration Tests (REST layer tests).
+ * Sets up the mockMvc using Spring Rest Auto Docs for automatic REST API documentation.
+ */
 @RunWith(SpringRunner.class)
-@SpringBootTest
-public class MockMvcBase {
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+public abstract class MockMvcBase extends CommonBase {
 
     @Rule
     public JUnitRestDocumentation restDocumentation = new JUnitRestDocumentation();
@@ -69,4 +73,5 @@ public class MockMvcBase {
                         ))
                 .build();
     }
+
 }

@@ -7,9 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 
-import java.math.BigDecimal;
-import java.util.Arrays;
-
 import static org.hamcrest.Matchers.is;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -22,17 +19,7 @@ public class ProductControllerTest extends MockMvcBase {
 
     @Before
     public void setUp() {
-        Arrays.asList(
-                Product.builder()
-                        .name("product test name 1")
-                        .price(BigDecimal.ONE)
-                        .build(),
-                Product.builder()
-                        .name("product test name 2")
-                        .price(new BigDecimal(100.54))
-                        .build()
-        )
-                .forEach(this.productService::create);
+        ProductSampler.getTwoProducts().forEach(this.productService::create);
     }
 
     @Test
