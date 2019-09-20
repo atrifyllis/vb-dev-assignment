@@ -13,4 +13,4 @@ ifndef::snippets[]
 endif::[]
 
 
-include::{snippets}/dev-assignment-application-tests/should-return-product-list/auto-section.adoc[]
+include::{snippets}/product-controller-test//should-return-product-list/auto-section.adoc[]

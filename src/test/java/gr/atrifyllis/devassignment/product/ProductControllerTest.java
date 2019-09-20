@@ -1,4 +1,4 @@
-package gr.atrifyllis.devassignment;
+package gr.atrifyllis.devassignment.product;
 
 import gr.atrifyllis.devassignment.support.MockMvcBase;
 import org.junit.Before;
@@ -15,7 +15,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
-public class DevAssignmentApplicationTests extends MockMvcBase {
+public class ProductControllerTest extends MockMvcBase {
 
     @Autowired
     private ProductService productService;
