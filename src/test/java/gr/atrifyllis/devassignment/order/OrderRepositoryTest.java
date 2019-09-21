@@ -2,7 +2,7 @@ package gr.atrifyllis.devassignment.order;
 
 import gr.atrifyllis.devassignment.product.Product;
 import gr.atrifyllis.devassignment.product.ProductRepository;
-import gr.atrifyllis.devassignment.product.ProductSampler;
+import gr.atrifyllis.devassignment.product.ProductSampleCreator;
 import gr.atrifyllis.devassignment.support.JpaTestBase;
 import org.junit.Before;
 import org.junit.Test;
@@ -31,7 +31,7 @@ public class OrderRepositoryTest extends JpaTestBase {
 
     @Before
     public void setUp() {
-        productRepository.saveAll(ProductSampler.getTwoProducts());
+        productRepository.saveAll(ProductSampleCreator.getTwoProducts());
         persistedProducts = new HashSet<>(productRepository.findAll());
 
     }

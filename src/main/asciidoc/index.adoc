@@ -14,3 +14,6 @@ endif::[]
 
 
 include::{snippets}/product-controller-test//should-return-product-list/auto-section.adoc[]
+include::{snippets}/product-controller-test//should-create-product/auto-section.adoc[]
+include::{snippets}/product-controller-test//should-not-create-product-with-zero-price/auto-section.adoc[]
+include::{snippets}/product-controller-test//should-not-create-product-without-name/auto-section.adoc[]

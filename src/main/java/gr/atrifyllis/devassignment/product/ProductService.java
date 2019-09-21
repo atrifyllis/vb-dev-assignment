@@ -16,7 +16,7 @@ class ProductService {
         return this.productRepository.findAll();
     }
 
-    Product create(Product p) {
-        return this.productRepository.save(p);
+    Product create(ProductDto p) {
+        return this.productRepository.save(Product.builder().name(p.getName()).price(p.getPrice()).build());
     }
 }

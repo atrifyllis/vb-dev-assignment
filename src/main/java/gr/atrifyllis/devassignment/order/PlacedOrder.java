@@ -6,7 +6,6 @@ import lombok.*;
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -15,7 +14,7 @@ import java.util.Set;
 @NoArgsConstructor(access = AccessLevel.PACKAGE)
 @Setter(value = AccessLevel.PACKAGE)
 @Getter
-public class PlacedOrder {
+class PlacedOrder {
     @Id
     @GeneratedValue
     @Setter(AccessLevel.PRIVATE)
@@ -29,6 +28,7 @@ public class PlacedOrder {
     @Setter(AccessLevel.PRIVATE)
     private BigDecimal orderPrice;
 
+    // Set is used instead of List because of delete operation.
     @ManyToMany
     @JoinTable(name = "order_product",
             joinColumns = @JoinColumn(name = "order_id"),

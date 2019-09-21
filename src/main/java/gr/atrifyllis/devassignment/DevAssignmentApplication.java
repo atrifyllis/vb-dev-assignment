@@ -1,7 +1,7 @@
 package gr.atrifyllis.devassignment;
 
 import gr.atrifyllis.devassignment.product.ProductRepository;
-import gr.atrifyllis.devassignment.product.ProductSampler;
+import gr.atrifyllis.devassignment.product.ProductSampleCreator;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -16,7 +16,7 @@ public class DevAssignmentApplication {
 
     @Bean
     public CommandLineRunner initializer(ProductRepository productRepository) {
-        return args -> productRepository.saveAll(ProductSampler.getTwoProducts());
+        return args -> productRepository.saveAll(ProductSampleCreator.getTwoProducts());
     }
 }
 
