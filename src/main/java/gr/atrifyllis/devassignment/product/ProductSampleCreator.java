@@ -9,11 +9,11 @@ public class ProductSampleCreator {
     public static List<Product> getTwoProducts() {
         return Arrays.asList(Product.builder()
                         .name("product test name 1")
-                        .price(BigDecimal.ONE)
+                        .currentPrice(BigDecimal.ONE)
                         .build(),
                 Product.builder()
                         .name("product test name 2")
-                        .price(new BigDecimal(100.54))
+                        .currentPrice(new BigDecimal(100.54))
                         .build());
     }
 

@@ -30,7 +30,7 @@ public class ProductControllerTest extends MockMvcBase {
     public void setUp() {
         cleanUpDatabase();
 
-        ProductSampleCreator.getTwoProducts().stream().map(p -> new ProductDto(p.getName(), p.getPrice())).forEach(this.productService::create);
+        ProductSampleCreator.getTwoProducts().stream().map(p -> new ProductDto(p.getName(), p.getCurrentPrice())).forEach(this.productService::create);
     }
 
     @Test

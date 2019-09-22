@@ -17,7 +17,7 @@ class ProductService {
     }
 
     Product create(ProductDto p) {
-        return this.productRepository.save(Product.builder().name(p.getName()).price(p.getPrice()).build());
+        return this.productRepository.save(Product.builder().name(p.getName()).currentPrice(p.getPrice()).build());
     }
 
     /**
@@ -32,7 +32,7 @@ class ProductService {
     Product update(Long id, ProductDto p) {
         Product persistedProduct = this.productRepository.getOne(id);
         persistedProduct.setName(p.getName());
-        persistedProduct.setPrice(p.getPrice());
+        persistedProduct.setCurrentPrice(p.getPrice());
         return this.productRepository.save(persistedProduct);
     }
 }

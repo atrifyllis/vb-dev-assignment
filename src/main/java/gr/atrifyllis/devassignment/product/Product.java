@@ -11,11 +11,9 @@ import java.math.BigDecimal;
  * The product details.
  */
 @Entity
-@Builder(toBuilder = true)
-@AllArgsConstructor(access = AccessLevel.PACKAGE)
-@NoArgsConstructor(access = AccessLevel.PACKAGE)
 @Setter(value = AccessLevel.PACKAGE)
 @Getter
+@NoArgsConstructor
 public class Product {
 
     /**
@@ -23,7 +21,7 @@ public class Product {
      */
     @Id
     @GeneratedValue
-    @Setter(AccessLevel.PRIVATE)
+    @Setter(AccessLevel.NONE)
     private Long id;
 
     /**
@@ -34,5 +32,11 @@ public class Product {
     /**
      * The price of the product.
      */
-    private BigDecimal price;
+    private BigDecimal currentPrice;
+
+    @Builder
+    public Product(String name, BigDecimal currentPrice) {
+        this.name = name;
+        this.currentPrice = currentPrice;
+    }
 }
