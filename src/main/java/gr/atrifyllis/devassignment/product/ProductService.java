@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
+public
 class ProductService {
     private ProductRepository productRepository;
 
@@ -12,11 +13,11 @@ class ProductService {
         this.productRepository = productRepository;
     }
 
-    List<Product> findAll() {
+    public List<Product> findAll() {
         return this.productRepository.findAll();
     }
 
-    Product create(ProductDto p) {
+    public Product create(ProductDto p) {
         return this.productRepository.save(Product.builder().name(p.getName()).currentPrice(p.getPrice()).build());
     }
 
