@@ -1,0 +1,25 @@
+version:  "3.6"
+
+services:
+  dev-assignment-service:
+    image: atrifyllis/dev-assignment:0.0.1-SNAPSHOT
+    ports:
+      - 8080:8080
+    depends_on:
+      - dev-assignment-db
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://dev-assignment-db/dev-assignment?useSSL=false&allowPublicKeyRetrieval=true&createDatabaseIfNotExist=true
+      - SPRING_DATASOURCE_USERNAME=dbuser
+      - SPRING_DATASOURCE_PASSWORD=dbpass
+      - SPRING_PROFILES_ACTIVE=docker
+  dev-assignment-db:
+    image: mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=password
+      - MYSQL_USER=dbuser
+      - MYSQL_PASSWORD=dbpass
+      - MYSQL_DATABASE=dev-assignment
+      - MYSQL_ONETIME_PASSWORD=true
+    volumes:
+      - ./data/:/var/lib/mysql
+

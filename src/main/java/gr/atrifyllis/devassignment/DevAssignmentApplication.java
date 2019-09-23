@@ -9,6 +9,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Profile;
 
 import java.util.HashSet;
 import java.util.List;
@@ -21,6 +22,7 @@ public class DevAssignmentApplication {
     }
 
     @Bean
+    @Profile("!docker") // do not initialize products when running in docker
     public CommandLineRunner initializer(ProductRepository productRepository, OrderRepository orderRepository) {
         return args -> {
             productRepository.saveAll(ProductSampleCreator.getTwoProducts());
