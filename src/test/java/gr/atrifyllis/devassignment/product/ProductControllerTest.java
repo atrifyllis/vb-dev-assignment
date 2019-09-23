@@ -40,7 +40,7 @@ public class ProductControllerTest extends MockMvcBase {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].name", is("product test name 1")))
-                .andExpect(jsonPath("$[1].price", is(100.54))); // weird jsonPath conversion to Double!
+                .andExpect(jsonPath("$[1].currentPrice", is(100.54))); // weird jsonPath conversion to Double!
     }
 
 
@@ -54,7 +54,7 @@ public class ProductControllerTest extends MockMvcBase {
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.id").exists())
-                .andExpect(jsonPath("$.price", is(sampleProductDto.getPrice().doubleValue())));
+                .andExpect(jsonPath("$.currentPrice", is(sampleProductDto.getPrice().doubleValue())));
     }
 
     @Test
@@ -96,9 +96,10 @@ public class ProductControllerTest extends MockMvcBase {
                         .content(objectMapper.writeValueAsString(sampleProductDto))
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id", is(productId.intValue())))
-                .andExpect(jsonPath("$.price", is(sampleProductDto.getPrice().doubleValue())));
+                .andExpect(jsonPath("$.currentPrice", is(sampleProductDto.getPrice().doubleValue())));
     }
 
     @Test

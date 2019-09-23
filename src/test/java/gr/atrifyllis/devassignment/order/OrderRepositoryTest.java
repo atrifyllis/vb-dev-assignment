@@ -12,6 +12,7 @@ import org.springframework.test.jdbc.JdbcTestUtils;
 
 import javax.annotation.PostConstruct;
 import javax.sql.DataSource;
+import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.util.HashSet;
 import java.util.List;
@@ -64,6 +65,20 @@ public class OrderRepositoryTest extends JpaTestBase {
         // check that products are still intact
         assertThat(JdbcTestUtils.countRowsInTable(jdbcTemplate, "product")).isEqualTo(2);
 
+    }
+
+    @Test
+    public void shouldNotAffectOrderPriceWhenUpdatingProductPrice() {
+        PlacedOrder persistedOrder = orderRepository.saveAndFlush(getOrder(persistedProducts)); // flush to make sure the order is saved
+        BigDecimal oldOrderPrice = persistedOrder.getOrderPrice();
+        // update product price
+        Product firstOrderProduct = persistedProducts.stream().findFirst().orElseThrow(IllegalStateException::new);
+        firstOrderProduct.setCurrentPrice(firstOrderProduct.getCurrentPrice().add(BigDecimal.ONE));
+        productRepository.saveAndFlush(firstOrderProduct);
+
+        PlacedOrder updatedOrder = orderRepository.findById(persistedOrder.getId()).orElseThrow(IllegalStateException::new);
+        // check that order price has not changed
+        assertThat(updatedOrder.getOrderPrice()).isEqualTo(oldOrderPrice);
     }
 
 

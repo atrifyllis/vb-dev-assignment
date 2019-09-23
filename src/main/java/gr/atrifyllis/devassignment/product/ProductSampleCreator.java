@@ -13,7 +13,7 @@ public class ProductSampleCreator {
                         .build(),
                 Product.builder()
                         .name("product test name 2")
-                        .currentPrice(new BigDecimal(100.54))
+                        .currentPrice(new BigDecimal("100.54"))
                         .build());
     }
 

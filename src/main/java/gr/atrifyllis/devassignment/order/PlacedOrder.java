@@ -4,6 +4,7 @@ import gr.atrifyllis.devassignment.product.Product;
 import lombok.*;
 
 import javax.persistence.*;
+import javax.validation.constraints.Digits;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.PastOrPresent;
@@ -28,7 +29,7 @@ class PlacedOrder {
     @PastOrPresent
     private LocalDateTime placedAt;
 
-    @javax.persistence.Column(updatable = false) // TODO check if this extra precaution is needed
+    @Column(updatable = false, precision = 7, scale = 2) // TODO check if this extra precaution is needed
     @Setter(AccessLevel.NONE)
     private BigDecimal orderPrice;
 

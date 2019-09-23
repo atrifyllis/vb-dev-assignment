@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
@@ -26,5 +27,6 @@ class ProductDto {
      */
     @NotNull(message = "Please provide a price for the product")
     @DecimalMin("1.00")
+    @Digits(integer = 7, fraction = 2)
     BigDecimal price;
 }

@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 
@@ -101,6 +102,20 @@ public class OrderControllerTest extends MockMvcBase {
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.errors").isMap())
                 .andExpect(jsonPath("$.errors.buyer").exists());
+    }
+
+    @Test
+    public void shouldNotCreateOrderWithWrongProductIds() throws Exception {
+        OrderDto orderWithoutBuyer = OrderDto.builder().buyer("valid@email.com").productIds(new HashSet<>(Arrays.asList(persistedProducts.get(0).getId(), 111L))).build();
+        this.mockMvc
+                .perform(post("/orders").accept(APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(orderWithoutBuyer))
+                        .characterEncoding("utf-8") // needed for print
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.message", is("Unable to find Product with id 111")));
     }
 
 

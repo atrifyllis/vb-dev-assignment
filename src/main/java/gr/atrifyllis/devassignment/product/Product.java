@@ -2,16 +2,18 @@ package gr.atrifyllis.devassignment.product;
 
 import lombok.*;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.validation.constraints.Digits;
 import java.math.BigDecimal;
 
 /**
  * The product details.
  */
 @Entity
-@Setter(value = AccessLevel.PACKAGE)
+@Setter
 @Getter
 @NoArgsConstructor
 public class Product {
@@ -32,6 +34,7 @@ public class Product {
     /**
      * The price of the product.
      */
+    @Column(precision = 7, scale = 2)
     private BigDecimal currentPrice;
 
     @Builder
