@@ -7,31 +7,39 @@ import org.springframework.stereotype.Service;
 import javax.persistence.EntityNotFoundException;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.toList;
 
 @Service
+public
 class OrderService {
-    private OrderRepository orderRepository;
-    private ProductRepository productRepository;
+    private final OrderRepository orderRepository;
+    private final ProductRepository productRepository;
 
     OrderService(OrderRepository orderRepository, ProductRepository productRepository) {
         this.orderRepository = orderRepository;
         this.productRepository = productRepository;
     }
 
-    List<PlacedOrder> findAll() {
-        return this.orderRepository.findAll();
+    List<PlacedOrderResponseDto> findAll() {
+        return this.orderRepository.findAll().stream()
+                .map(PlacedOrderResponseDto::convertToDto)
+                .collect(toList());
     }
 
-    PlacedOrder create(OrderDto o) {
-        Set<Product> persistedProducts = o.productIds.stream()
-                .map(pId -> this.productRepository.findById(pId).orElseThrow(() -> new EntityNotFoundException("Unable to find Product with id " + pId)))
-                .collect(Collectors.toSet());
-        return this.orderRepository.save(PlacedOrder.builder()
-                .buyer(o.getBuyer())
-                .placedAt(LocalDateTime.now())
-                .products(persistedProducts)
-                .build());
+    /**
+     * Creates a new order with specified products.
+     * If one of the products does not exist the whole creation fails.
+     *
+     * @param o the new order details
+     * @return the saved order details
+     */
+    PlacedOrderResponseDto create(OrderDto o) {
+        List<Product> persistedProducts = o.productIds.stream()
+                .map(pId -> this.productRepository.findById(pId)
+                        .orElseThrow(() -> new EntityNotFoundException("Unable to find Product with id " + pId)))
+                .collect(toList());
+        return PlacedOrderResponseDto.convertToDto(this.orderRepository.save(new PlacedOrder(o.getBuyer(), LocalDateTime.now(), persistedProducts)));
     }
+
 }

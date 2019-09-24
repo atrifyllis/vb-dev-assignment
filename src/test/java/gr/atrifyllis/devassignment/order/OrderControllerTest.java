@@ -10,6 +10,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
@@ -25,6 +26,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+// tests won't emulate production behavior without transactional annotation and will fail
+@Transactional
 public class OrderControllerTest extends MockMvcBase {
 
     @Autowired
@@ -44,7 +47,7 @@ public class OrderControllerTest extends MockMvcBase {
 
         ProductSampleCreator.getTwoProducts().stream().map(p -> new ProductDto(p.getName(), p.getCurrentPrice())).forEach(this.productService::create);
         persistedProducts = productService.findAll();
-        orderService.create(OrderSampleCreator.getOrderDtoFromOrder(OrderSampleCreator.getOrder(new HashSet<>(persistedProducts)), persistedProducts));
+        orderService.create(OrderSampleCreator.getOrderDtoFromOrder(OrderSampleCreator.getOrder(persistedProducts), persistedProducts));
     }
 
 
@@ -55,12 +58,12 @@ public class OrderControllerTest extends MockMvcBase {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].buyer", is("valid@email.com")))
-                .andExpect(jsonPath("$[0].orderPrice", is(101.54)));
+                .andExpect(jsonPath("$[0].totalPrice", is(101.54)));
     }
 
     @Test
     public void shouldCreateOrder() throws Exception {
-        OrderDto sampleOrderDto = OrderSampleCreator.getOrderDtoFromOrder(OrderSampleCreator.getOrder(new HashSet<>(persistedProducts)), persistedProducts);
+        OrderDto sampleOrderDto = OrderSampleCreator.getOrderDtoFromOrder(OrderSampleCreator.getOrder(persistedProducts), persistedProducts);
         this.mockMvc
                 .perform(post("/orders").accept(APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(sampleOrderDto))
@@ -69,9 +72,9 @@ public class OrderControllerTest extends MockMvcBase {
                         .characterEncoding("utf-8")) // needed for print()
                 .andDo(print())
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.products", hasSize(2)))
+                .andExpect(jsonPath("$.lineProducts", hasSize(2)))
                 .andExpect(jsonPath("$.id").exists())
-                .andExpect(jsonPath("$.orderPrice", is(getTotalPriceOfProducts(persistedProducts))));
+                .andExpect(jsonPath("$.totalPrice", is(getTotalPriceOfProducts(persistedProducts))));
     }
 
     @Test

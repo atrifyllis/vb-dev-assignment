@@ -23,7 +23,7 @@ public class OrderController {
      * @return the list of order details together with its product details.
      */
     @GetMapping
-    public ResponseEntity<List<PlacedOrder>> getOrders() {
+    public ResponseEntity<List<PlacedOrderResponseDto>> getOrders() {
         return ResponseEntity.ok().body(this.orderService.findAll());
     }
 
@@ -35,7 +35,7 @@ public class OrderController {
      * @return the created order.
      */
     @PostMapping
-    public ResponseEntity<PlacedOrder> createOrder(@Valid @RequestBody OrderDto order) {
+    public ResponseEntity<PlacedOrderResponseDto> createOrder(@Valid @RequestBody OrderDto order) {
         return ResponseEntity.status(HttpStatus.CREATED).body(this.orderService.create(order));
     }
 }

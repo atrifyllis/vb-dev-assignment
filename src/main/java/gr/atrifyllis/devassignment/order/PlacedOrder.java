@@ -4,19 +4,20 @@ import gr.atrifyllis.devassignment.product.Product;
 import lombok.*;
 
 import javax.persistence.*;
-import javax.validation.constraints.Digits;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.PastOrPresent;
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PACKAGE)
 @Setter(value = AccessLevel.PACKAGE)
 @Getter
-class PlacedOrder {
+@EqualsAndHashCode
+public class PlacedOrder {
     @Id
     @GeneratedValue
     @Setter(AccessLevel.NONE)
@@ -29,32 +30,31 @@ class PlacedOrder {
     @PastOrPresent
     private LocalDateTime placedAt;
 
-    @Column(updatable = false, precision = 7, scale = 2) // TODO check if this extra precaution is needed
-    @Setter(AccessLevel.NONE)
-    private BigDecimal orderPrice;
-
-    // Set is used instead of List because of delete operation performance  issues.
-    @ManyToMany
-    @JoinTable(name = "order_product",
-            joinColumns = @JoinColumn(name = "order_id"),
-            inverseJoinColumns = @JoinColumn(name = "product_id")
+    /**
+     * Maps to {@link OrderLine}s not to {@link Product}s (
+     * This way a "snapshot" of the product at the time of the order is saved.
+     */
+    @OneToMany(
+            mappedBy = "order",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
     )
-    private Set<Product> products;
-
-    @Builder // builder annotates constructor to exclude specific fields
-    public PlacedOrder(String buyer, LocalDateTime placedAt, Set<Product> products) {
-        this.buyer = buyer;
-        this.placedAt = placedAt;
-        this.products = products;
-    }
+    private List<OrderLine> products = new ArrayList<>();
 
     /**
-     * This method should be called only on save and never again.
+     * Creates OrderLines from Products for the new Order.
+     *
+     * @param buyer    the email of the buyer.
+     * @param placedAt the timestamp of the order creation.
+     * @param products the list of {@link Product}s for the order.
      */
-    @PrePersist
-    private void calculateTotal() {
-        this.orderPrice = this.products.stream()
-                .map(Product::getCurrentPrice)
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
+    PlacedOrder(String buyer, LocalDateTime placedAt, List<Product> products) {
+        this.buyer = buyer;
+        this.placedAt = placedAt;
+        this.products.addAll(
+                products.stream()
+                        .map(p -> new OrderLine(this, p))
+                        .collect(Collectors.toList())
+        );
     }
 }

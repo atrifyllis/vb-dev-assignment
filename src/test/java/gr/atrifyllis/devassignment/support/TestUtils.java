@@ -5,6 +5,6 @@ import org.springframework.test.jdbc.JdbcTestUtils;
 
 class TestUtils {
     static void cleanUpDb(JdbcTemplate jdbcTemplate) {
-        JdbcTestUtils.deleteFromTables(jdbcTemplate, "order_product", "placed_order", "product");
+        JdbcTestUtils.deleteFromTables(jdbcTemplate, "order_line", "placed_order", "product");
     }
 }

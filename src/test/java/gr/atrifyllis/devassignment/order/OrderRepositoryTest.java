@@ -14,7 +14,7 @@ import javax.annotation.PostConstruct;
 import javax.sql.DataSource;
 import java.math.BigDecimal;
 import java.sql.SQLException;
-import java.util.HashSet;
+import java.util.ArrayList;
 import java.util.List;
 
 import static gr.atrifyllis.devassignment.order.OrderSampleCreator.getOrder;
@@ -30,13 +30,13 @@ public class OrderRepositoryTest extends JpaTestBase {
     @Autowired
     private ProductRepository productRepository;
 
-    private HashSet<Product> persistedProducts = new HashSet<>();
+    private List<Product> persistedProducts = new ArrayList<>();
 
     @Before
     public void setUp() {
         cleanUpDatabase();
         productRepository.saveAll(ProductSampleCreator.getTwoProducts());
-        persistedProducts = new HashSet<>(productRepository.findAll());
+        persistedProducts = productRepository.findAll();
 
     }
 
@@ -53,7 +53,7 @@ public class OrderRepositoryTest extends JpaTestBase {
     public void shouldDeleteOrderAndIntermediateEntryButNotProducts() {
         PlacedOrder persistedOrder = orderRepository.saveAndFlush(getOrder(persistedProducts)); // flush to make sure the order is saved
 
-        assertThat(JdbcTestUtils.countRowsInTable(jdbcTemplate, "order_product")).isEqualTo(2);
+        assertThat(JdbcTestUtils.countRowsInTable(jdbcTemplate, "order_line")).isEqualTo(2);
 
         orderRepository.deleteById(persistedOrder.getId());
 
@@ -61,7 +61,7 @@ public class OrderRepositoryTest extends JpaTestBase {
 
         assertThat(orders).hasSize(0);
         // check that the records are delete from the intermediate table
-        assertThat(JdbcTestUtils.countRowsInTable(jdbcTemplate, "order_product")).isEqualTo(0);
+        assertThat(JdbcTestUtils.countRowsInTable(jdbcTemplate, "order_line")).isEqualTo(0);
         // check that products are still intact
         assertThat(JdbcTestUtils.countRowsInTable(jdbcTemplate, "product")).isEqualTo(2);
 
@@ -70,7 +70,7 @@ public class OrderRepositoryTest extends JpaTestBase {
     @Test
     public void shouldNotAffectOrderPriceWhenUpdatingProductPrice() {
         PlacedOrder persistedOrder = orderRepository.saveAndFlush(getOrder(persistedProducts)); // flush to make sure the order is saved
-        BigDecimal oldOrderPrice = persistedOrder.getOrderPrice();
+        BigDecimal oldOrderPrice = PlacedOrderResponseDto.calculateTotalOrderPrice(persistedOrder.getProducts());
         // update product price
         Product firstOrderProduct = persistedProducts.stream().findFirst().orElseThrow(IllegalStateException::new);
         firstOrderProduct.setCurrentPrice(firstOrderProduct.getCurrentPrice().add(BigDecimal.ONE));
@@ -78,7 +78,7 @@ public class OrderRepositoryTest extends JpaTestBase {
 
         PlacedOrder updatedOrder = orderRepository.findById(persistedOrder.getId()).orElseThrow(IllegalStateException::new);
         // check that order price has not changed
-        assertThat(updatedOrder.getOrderPrice()).isEqualTo(oldOrderPrice);
+        assertThat(PlacedOrderResponseDto.calculateTotalOrderPrice(updatedOrder.getProducts())).isEqualTo(oldOrderPrice);
     }
 
 

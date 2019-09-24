@@ -9,14 +9,9 @@ import java.util.stream.Collectors;
 
 public class OrderSampleCreator {
 
-    public static PlacedOrder getOrder(Set<Product> persistedProducts) {
-        return PlacedOrder.builder()
-                .buyer("valid@email.com")
-                .placedAt(LocalDateTime.now())
-                .products(persistedProducts)
-                .build();
+    public static PlacedOrder getOrder(List<Product> persistedProducts) {
+        return new PlacedOrder("valid@email.com", LocalDateTime.now(), persistedProducts);
     }
-
 
     static OrderDto getOrderDtoFromOrder(PlacedOrder order, List<Product> persistedProducts) {
         return OrderDto.builder()
