@@ -1,14 +1,12 @@
 {
 	"info": {
+		"_postman_id": "98133ac9-da57-45a6-a292-63fb464b0a42",
 		"name": "vb-assignment",
-		"_postman_id": "ffbcebbe-4a1d-7998-3f58-ec9043676fd9",
-		"description": "",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
 		{
 			"name": "products",
-			"description": "",
 			"item": [
 				{
 					"name": "get products",
@@ -20,22 +18,17 @@
 								"value": "application/json"
 							}
 						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n\t\"name\": \"test product 1\",\n\t\"price\": 500.50\n}"
-						},
 						"url": {
-							"raw": "http://localhost:8080/products",
+							"raw": "http://{{host}}:8080/products",
 							"protocol": "http",
 							"host": [
-								"localhost"
+								"{{host}}"
 							],
 							"port": "8080",
 							"path": [
 								"products"
 							]
-						},
-						"description": ""
+						}
 					},
 					"response": []
 				},
@@ -51,20 +44,19 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"name\": \"test product 1\",\n\t\"price\": 500.50\n}"
+							"raw": "{\n\t\"name\": \"test product 1\",\n\t\"price\": 500.52\n}"
 						},
 						"url": {
-							"raw": "http://localhost:8080/products",
+							"raw": "http://{{host}}:8080/products",
 							"protocol": "http",
 							"host": [
-								"localhost"
+								"{{host}}"
 							],
 							"port": "8080",
 							"path": [
 								"products"
 							]
-						},
-						"description": ""
+						}
 					},
 					"response": []
 				},
@@ -83,18 +75,17 @@
 							"raw": "{\n\t\"name\": \"updated product name\",\n\t\"price\": 55\n}"
 						},
 						"url": {
-							"raw": "http://localhost:8080/products/1",
+							"raw": "http://{{host}}:8080/products/1",
 							"protocol": "http",
 							"host": [
-								"localhost"
+								"{{host}}"
 							],
 							"port": "8080",
 							"path": [
 								"products",
 								"1"
 							]
-						},
-						"description": ""
+						}
 					},
 					"response": []
 				}
@@ -102,7 +93,6 @@
 		},
 		{
 			"name": "orders",
-			"description": "",
 			"item": [
 				{
 					"name": "get orders",
@@ -114,22 +104,17 @@
 								"value": "application/json"
 							}
 						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n\t\"name\": \"test product 1\",\n\t\"price\": 500.50\n}"
-						},
 						"url": {
-							"raw": "http://localhost:8080/orders",
+							"raw": "http://{{host}}:8080/orders",
 							"protocol": "http",
 							"host": [
-								"localhost"
+								"{{host}}"
 							],
 							"port": "8080",
 							"path": [
 								"orders"
 							]
-						},
-						"description": ""
+						}
 					},
 					"response": []
 				},
@@ -145,20 +130,19 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"buyer\": \"valid@email.com\",\n\t\"productIds\": [1,2]\n}"
+							"raw": "{\n\t\"buyer\": \"valid@email.com\",\n\t\"productIds\": [1,2,4]\n}"
 						},
 						"url": {
-							"raw": "http://localhost:8080/orders",
+							"raw": "http://{{host}}:8080/orders",
 							"protocol": "http",
 							"host": [
-								"localhost"
+								"{{host}}"
 							],
 							"port": "8080",
 							"path": [
 								"orders"
 							]
-						},
-						"description": ""
+						}
 					},
 					"response": []
 				}
