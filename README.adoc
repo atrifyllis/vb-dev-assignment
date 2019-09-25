@@ -17,26 +17,26 @@ Furthermore, JWT ensures stateless exchange of tokens and can also be used for a
 
 This could be implemented either:
 
-1. using Spring Security (a separate authorization server would have to be implemented and our API should be transformed to a resource server) or
-2. use an open source Identity and Access Management solution like Keycloak.
+1. using Spring Security (a separate authorization server would have to be implemented and our API service must be transformed to a resource server) or
+2. use an open source Identity and Access Management solution like Keycloak (which integrates well with Spring/Spring Security).
 
 === Redundancy
 
-The first step for service redundancy is to deploy multiple instances of the Spring Boot app.
+The first step for service redundancy is to deploy *multiple instances* of the Spring Boot app.
 This will require some infrastructure.
 Specifically, it requires some kind of a container orchestrator.
 At the moment, the most popular container orchestrator is Kubernetes.
 There is a Maven plugin which can easily generated a Kubernetes yaml for our Spring boot application (fabric8-maven-plugin).
 This way we can create a Kubernetes deployment, specify the number of replicas (for example 3) and deploy our service in a Kubernetes cluster.
-We then need some kind of load balancing (e.g. AWS/EKS provides this as a service) to be able to access our service instances.
+There is also need for some kind of external load balancing to be able to access our service instances (e.g. EKS/GKE etc. provide load balancing as a service).
 
-The next step has to do with the persistence mechanism redundancy.
-This is similar to the service redundancy but with an important difference: we need a stateful replication instead of a stateless replication.
+The next step has to do with the *persistence* mechanism redundancy.
+This is similar to the service redundancy but with an important difference: we need stateful replication instead of a stateless replication.
 One way to deal with this problem in Kubernetes is using StatefulSets.
-In that case, we must deploy a MySQL cluster (master/slave topology).
-This is a complex solution.
-In EKS specifically there is an alternative:
-We can use a cloud native storage solution (like Portworx) which is replicated storage.
+In that case, we could deploy a MySQL cluster (master/slave topology).
+This is a complex solution and requires a lot of configuration.
+In EKS specifically there is an alternative solution:
+We can use a cloud native storage solution (like Portworx) which is replicated storage (not replicated db server).
 This way we have an easier deployment (only one MySQL instance) and we can achieve redundancy by replicating the data only.
 We might get some down time in case of a Pod failure but a new Pod will be created automatically in a node of our cluster which has the replicated data.
 
@@ -55,14 +55,15 @@ This will start the Spring Boot application locally (with the H2 embedded databa
 
 == Production deployment
 
-To run this application you need to have Docker and Docker Compose installed.
+To run this application in "production" mode you need to have Docker and Docker Compose installed.
 
 Run `mvn clean install -Pdocker`
 This will build the application, run tests and build a local Docker image.
 
 Run `docker-compose up`
 
-This will run the application image in a Docker container and also start a MySQL database (using a persistent volume).
+This will run the application image in a Docker container and also start a MySQL database (using a persistent volume) in a Docker container.
+Data is persisted in the database between restarts.
 
 == Using the API
 
@@ -73,10 +74,10 @@ The root URL for the API is:
 
 You can import the Postman scripts included in the repository:
 
-* import the Postman environment file (optional): link:docker.postman_environment.json (you might need to change the host variable to your DOCKER_HOST IP)
+* import the Postman environment file (optional): link:docker.postman_environment.json (you might need to change the `host` variable to your `DOCKER_HOST IP`)
 * import the Postman environment file (optional): link:local.postman_environment.json
 * import the Postman collection file: link:vb-assignment.postman_collection.json
 
 == API Documentation
 
-link:generated-docs/index.html[]
+The API docs can be found link:https://atrifyllis.github.io/vb-dev-assignment/[here]

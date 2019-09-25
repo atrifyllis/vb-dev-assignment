@@ -144,7 +144,7 @@
                             <goal>copy-resources</goal>
                         </goals>
                         <configuration>
-                            <outputDirectory>${project.basedir}/generated-docs</outputDirectory>
+                            <outputDirectory>${project.basedir}/docs</outputDirectory>
                             <resources>
                                 <resource>
                                     <directory>${project.build.directory}/generated-docs</directory>
