@@ -7,6 +7,45 @@
 :toclevels: 4
 :sectlinks:
 
+== Local development
+
+To run this application in development mode you need Java 8+ installed.
+
+Run `./mvnw spring-boot:run`
+
+This will start the Spring Boot application locally (with an H2 embedded database).
+
+== Production deployment
+
+To run this application in "production" mode you need to have Docker (and Docker Compose) installed.
+
+Run `mvn clean install -Pdocker`
+
+This will build the application, run tests and build a local Docker image (namely `atrifyllis/dev-assignment`).
+
+Run `docker-compose up`
+
+This will run the application image in a Docker container and also start a MySQL database in a Docker container.
+Data is persisted in the database between restarts.
+
+== Using the API
+
+The root URL for the API is:
+
+* development: http://localhost:8080
+* docker: http://<DOCKER_HOST_IP>:8080
+
+You can import the Postman scripts included in the repository:
+
+* import the Postman environment file (optional): link:docker.postman_environment.json[]] (you might need to change the `host` variable to your `DOCKER_HOST IP`.
+It is set to 192.168.99.100 which is the default DOCKER_HOST IP on a docker-machine in Windows)
+* import the Postman environment file (optional): link:local.postman_environment.json][]
+* import the Postman collection file: link:vb-assignment.postman_collection.json][]
+
+== API Documentation
+
+The API docs can be found link:https://atrifyllis.github.io/vb-dev-assignment/[here]
+
 == Considerations
 
 === Authentication
@@ -25,59 +64,17 @@ This could be implemented either:
 The first step for service redundancy is to deploy *multiple instances* of the Spring Boot app.
 This will require some infrastructure.
 Specifically, it requires some kind of a container orchestrator.
-At the moment, the most popular container orchestrator is Kubernetes.
-There is a Maven plugin which can easily generated a Kubernetes yaml for our Spring boot application (fabric8-maven-plugin).
+At the moment, the most popular container orchestrator is *Kubernetes*.
+There is a Maven plugin which can easily generated a Kubernetes yaml for our Spring boot application (`fabric8-maven-plugin`).
 This way we can create a Kubernetes deployment, specify the number of replicas (for example 3) and deploy our service in a Kubernetes cluster.
 There is also need for some kind of external load balancing to be able to access our service instances (e.g. EKS/GKE etc. provide load balancing as a service).
 
-The next step has to do with the *persistence* mechanism redundancy.
+The next step has to do with the redundancy of the *persistence* mechanism .
 This is similar to the service redundancy but with an important difference: we need stateful replication instead of a stateless replication.
-One way to deal with this problem in Kubernetes is using StatefulSets.
-In that case, we could deploy a MySQL cluster (master/slave topology).
+One way to deal with this problem in Kubernetes is using `StatefulSets`.
+A Mysql cluster must be deployed in a Kubernetes cluster (master/slave topology).
 This is a complex solution and requires a lot of configuration.
-In EKS specifically there is an alternative solution:
-We can use a cloud native storage solution (like Portworx) which is replicated storage (not replicated db server).
+In EKS specifically we could consider an *alternative* solution:
+We could use a cloud native storage solution (like Portworx) which will replicated the data (not the whole db).
 This way we have an easier deployment (only one MySQL instance) and we can achieve redundancy by replicating the data only.
-We might get some down time in case of a Pod failure but a new Pod will be created automatically in a node of our cluster which has the replicated data.
-
-== Storage
-
-This application runs on an embedded H2 database in development mode.
-In production mode (Docker) it uses a MySQL database.
-
-== Local development
-
-To run this application in development mode you need Java 8+ installed.
-
-Run `./mvnw spring-boot:run`
-
-This will start the Spring Boot application locally (with the H2 embedded database).
-
-== Production deployment
-
-To run this application in "production" mode you need to have Docker and Docker Compose installed.
-
-Run `mvn clean install -Pdocker`
-This will build the application, run tests and build a local Docker image.
-
-Run `docker-compose up`
-
-This will run the application image in a Docker container and also start a MySQL database (using a persistent volume) in a Docker container.
-Data is persisted in the database between restarts.
-
-== Using the API
-
-The root URL for the API is:
-
-* development: http://localhost:8080
-* docker: http://DOCKER_HOST_IP:8080
-
-You can import the Postman scripts included in the repository:
-
-* import the Postman environment file (optional): link:docker.postman_environment.json (you might need to change the `host` variable to your `DOCKER_HOST IP`)
-* import the Postman environment file (optional): link:local.postman_environment.json
-* import the Postman collection file: link:vb-assignment.postman_collection.json
-
-== API Documentation
-
-The API docs can be found link:https://atrifyllis.github.io/vb-dev-assignment/[here]
+We might get *some* down time in case of a Pod failure, but data redundancy is handled automatically by Portworx and a new Pod will be started automatically by Kubernetes on a node where the storage is replicated.

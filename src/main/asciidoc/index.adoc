@@ -12,8 +12,81 @@ ifndef::snippets[]
 endif::[]
 
 
-include::{snippets}/product-controller-test//should-return-product-list/auto-section.adoc[]
-include::{snippets}/product-controller-test//should-create-product/auto-section.adoc[]
-include::{snippets}/product-controller-test//should-update-product-price/auto-section.adoc[]
+include::{snippets}/product-controller-test/should-return-product-list/auto-section.adoc[]
+
+include::{snippets}/product-controller-test/should-create-product/auto-section.adoc[]
+
+
+==== Invalid product creation (name not present)
+
+===== Example request
+
+include::{snippets}/product-controller-test/should-not-create-product-without-name/curl-request.adoc[]
+
+===== Example response
+
+include::{snippets}/product-controller-test/should-not-create-product-without-name/http-response.adoc[]
+
+==== Invalid product creation (price zero)
+
+===== Example request
+
+include::{snippets}/product-controller-test/should-not-create-product-with-zero-price/curl-request.adoc[]
+
+===== Example response
+
+include::{snippets}/product-controller-test/should-not-create-product-with-zero-price/http-response.adoc[]
+
+
+include::{snippets}/product-controller-test/should-update-product-price/auto-section.adoc[]
+
+
+==== Invalid product update (product not found)
+
+===== Example request
+
+include::{snippets}/product-controller-test/should-not-update-product-not-found/curl-request.adoc[]
+
+===== Example response
+
+include::{snippets}/product-controller-test/should-not-update-product-not-found/http-response.adoc[]
+
+
 include::{snippets}/order-controller-test/should-return-order-list-when-in-range/auto-section.adoc[]
+
+==== Order list request with dates out of range
+
+===== Example request
+include::{snippets}/order-controller-test/should-return-empty-list-when-out-of-range/curl-request.adoc[]
+
+===== Example response
+include::{snippets}/order-controller-test/should-return-empty-list-when-out-of-range/http-response.adoc[]
+
+
 include::{snippets}/order-controller-test/should-create-order/auto-section.adoc[]
+
+
+==== Invalid order creation (wrong product ids)
+
+===== Example request
+include::{snippets}/order-controller-test/should-not-create-order-with-wrong-product-ids/curl-request.adoc[]
+
+===== Example response
+include::{snippets}/order-controller-test/should-not-create-order-with-wrong-product-ids/http-response.adoc[]
+
+==== Invalid order creation (without buyer email)
+
+===== Example request
+include::{snippets}/order-controller-test/should-not-create-order-without-buyer/curl-request.adoc[]
+
+===== Example response
+include::{snippets}/order-controller-test/should-not-create-order-without-buyer/http-response.adoc[]
+
+==== Invalid order creation (no products)
+
+===== Example request
+include::{snippets}/order-controller-test/should-not-create-order-without-products/curl-request.adoc[]
+
+===== Example response
+include::{snippets}/order-controller-test/should-not-create-order-without-products/http-response.adoc[]
+

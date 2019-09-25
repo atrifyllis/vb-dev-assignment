@@ -455,6 +455,18 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_response_fields_2">Response fields</a></li>
 <li><a href="#_example_request_2">Example request</a></li>
 <li><a href="#_example_response_2">Example response</a></li>
+<li><a href="#_invalid_product_creation_name_not_present">Invalid product creation (name not present)</a>
+<ul class="sectlevel4">
+<li><a href="#_example_request_3">Example request</a></li>
+<li><a href="#_example_response_3">Example response</a></li>
+</ul>
+</li>
+<li><a href="#_invalid_product_creation_price_zero">Invalid product creation (price zero)</a>
+<ul class="sectlevel4">
+<li><a href="#_example_request_4">Example request</a></li>
+<li><a href="#_example_response_4">Example response</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li><a href="#resources-product-controller-test-should-update-product-price">Update Product</a>
@@ -463,8 +475,14 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_query_parameters_3">Query parameters</a></li>
 <li><a href="#_request_fields_3">Request fields</a></li>
 <li><a href="#_response_fields_3">Response fields</a></li>
-<li><a href="#_example_request_3">Example request</a></li>
-<li><a href="#_example_response_3">Example response</a></li>
+<li><a href="#_example_request_5">Example request</a></li>
+<li><a href="#_example_response_5">Example response</a></li>
+<li><a href="#_invalid_product_update_product_not_found">Invalid product update (product not found)</a>
+<ul class="sectlevel4">
+<li><a href="#_example_request_6">Example request</a></li>
+<li><a href="#_example_response_6">Example response</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li><a href="#resources-order-controller-test-should-return-order-list-when-in-range">Get Orders</a>
@@ -473,8 +491,14 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_query_parameters_4">Query parameters</a></li>
 <li><a href="#_request_fields_4">Request fields</a></li>
 <li><a href="#_response_fields_4">Response fields</a></li>
-<li><a href="#_example_request_4">Example request</a></li>
-<li><a href="#_example_response_4">Example response</a></li>
+<li><a href="#_example_request_7">Example request</a></li>
+<li><a href="#_example_response_7">Example response</a></li>
+<li><a href="#_order_list_request_with_dates_out_of_range">Order list request with dates out of range</a>
+<ul class="sectlevel4">
+<li><a href="#_example_request_8">Example request</a></li>
+<li><a href="#_example_response_8">Example response</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li><a href="#resources-order-controller-test-should-create-order">Create Order</a>
@@ -483,8 +507,26 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_query_parameters_5">Query parameters</a></li>
 <li><a href="#_request_fields_5">Request fields</a></li>
 <li><a href="#_response_fields_5">Response fields</a></li>
-<li><a href="#_example_request_5">Example request</a></li>
-<li><a href="#_example_response_5">Example response</a></li>
+<li><a href="#_example_request_9">Example request</a></li>
+<li><a href="#_example_response_9">Example response</a></li>
+<li><a href="#_invalid_order_creation_wrong_product_ids">Invalid order creation (wrong product ids)</a>
+<ul class="sectlevel4">
+<li><a href="#_example_request_10">Example request</a></li>
+<li><a href="#_example_response_10">Example response</a></li>
+</ul>
+</li>
+<li><a href="#_invalid_order_creation_without_buyer_email">Invalid order creation (without buyer email)</a>
+<ul class="sectlevel4">
+<li><a href="#_example_request_11">Example request</a></li>
+<li><a href="#_example_response_11">Example response</a></li>
+</ul>
+</li>
+<li><a href="#_invalid_order_creation_no_products">Invalid order creation (no products)</a>
+<ul class="sectlevel4">
+<li><a href="#_example_request_12">Example request</a></li>
+<li><a href="#_example_response_12">Example response</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -707,6 +749,68 @@ Content-Type: application/json;charset=UTF-8
 </div>
 </div>
 </div>
+<div class="sect3">
+<h4 id="_invalid_product_creation_name_not_present"><a class="link" href="#_invalid_product_creation_name_not_present">Invalid product creation (name not present)</a></h4>
+<div class="sect4">
+<h5 id="_example_request_3"><a class="link" href="#_example_request_3">Example request</a></h5>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ curl 'http://localhost:8080/products' -i -X POST \
+    -H 'Accept: application/json' \
+    -H 'Content-Type: application/json;charset=utf-8' \
+    -d '{"name":null,"price":10}'</code></pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_example_response_3"><a class="link" href="#_example_response_3">Example response</a></h5>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">HTTP/1.1 400 Bad Request
+Content-Length: 128
+Content-Type: application/json;charset=UTF-8
+
+{
+  "timestamp" : "2019-09-25T19:28:28.456+0000",
+  "errors" : {
+    "name" : "Please provide a name for the product"
+  }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_invalid_product_creation_price_zero"><a class="link" href="#_invalid_product_creation_price_zero">Invalid product creation (price zero)</a></h4>
+<div class="sect4">
+<h5 id="_example_request_4"><a class="link" href="#_example_request_4">Example request</a></h5>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ curl 'http://localhost:8080/products' -i -X POST \
+    -H 'Accept: application/json' \
+    -H 'Content-Type: application/json;charset=utf-8' \
+    -d '{"name":"product with 0 price","price":0}'</code></pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_example_response_4"><a class="link" href="#_example_response_4">Example response</a></h5>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">HTTP/1.1 400 Bad Request
+Content-Type: application/json;charset=UTF-8
+Content-Length: 129
+
+{
+  "timestamp" : "2019-09-25T19:28:28.386+0000",
+  "errors" : {
+    "price" : "must be greater than or equal to 1.00"
+  }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
 </div>
 <div class="sect2">
 <h3 id="resources-product-controller-test-should-update-product-price"><a class="link" href="#resources-product-controller-test-should-update-product-price">Update Product</a></h3>
@@ -824,7 +928,7 @@ Must have at most 7 integral digits and 2 fractional digits.</p></td>
 </table>
 </div>
 <div class="sect3">
-<h4 id="_example_request_3"><a class="link" href="#_example_request_3">Example request</a></h4>
+<h4 id="_example_request_5"><a class="link" href="#_example_request_5">Example request</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ curl 'http://localhost:8080/products/26' -i -X PUT \
@@ -835,7 +939,7 @@ Must have at most 7 integral digits and 2 fractional digits.</p></td>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_example_response_3"><a class="link" href="#_example_response_3">Example response</a></h4>
+<h4 id="_example_response_5"><a class="link" href="#_example_response_5">Example response</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">HTTP/1.1 200 OK
@@ -847,6 +951,35 @@ Content-Type: application/json;charset=UTF-8
   "name" : "product name 1",
   "currentPrice" : 10.5
 }</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_invalid_product_update_product_not_found"><a class="link" href="#_invalid_product_update_product_not_found">Invalid product update (product not found)</a></h4>
+<div class="sect4">
+<h5 id="_example_request_6"><a class="link" href="#_example_request_6">Example request</a></h5>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ curl 'http://localhost:8080/products/11212211212' -i -X PUT \
+    -H 'Accept: application/json' \
+    -H 'Content-Type: application/json;charset=utf-8' \
+    -d '{"name":"product does not exist","price":1}'</code></pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_example_response_6"><a class="link" href="#_example_response_6">Example response</a></h5>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">HTTP/1.1 404 Not Found
+Content-Length: 149
+Content-Type: application/json;charset=UTF-8
+
+{
+  "timestamp" : "2019-09-25T19:28:28.522+0000",
+  "message" : "Unable to find gr.atrifyllis.devassignment.product.Product with id 11212211212"
+}</code></pre>
+</div>
 </div>
 </div>
 </div>
@@ -970,7 +1103,7 @@ Must have at most 7 integral digits and 2 fractional digits.</p></td>
 </table>
 </div>
 <div class="sect3">
-<h4 id="_example_request_4"><a class="link" href="#_example_request_4">Example request</a></h4>
+<h4 id="_example_request_7"><a class="link" href="#_example_request_7">Example request</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ curl 'http://localhost:8080/orders?created_after=2019-09-24&amp;created_before=2019-09-26' -i -X GET \
@@ -979,7 +1112,7 @@ Must have at most 7 integral digits and 2 fractional digits.</p></td>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_example_response_4"><a class="link" href="#_example_response_4">Example response</a></h4>
+<h4 id="_example_response_7"><a class="link" href="#_example_response_7">Example response</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">HTTP/1.1 200 OK
@@ -997,8 +1130,32 @@ Content-Type: application/json;charset=UTF-8
     "price" : 100.54
   } ],
   "totalPrice" : 101.54,
-  "placedAt" : "2019-09-25T14:28:49.856"
+  "placedAt" : "2019-09-25T22:28:25.997"
 } ]</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_order_list_request_with_dates_out_of_range"><a class="link" href="#_order_list_request_with_dates_out_of_range">Order list request with dates out of range</a></h4>
+<div class="sect4">
+<h5 id="_example_request_8"><a class="link" href="#_example_request_8">Example request</a></h5>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ curl 'http://localhost:8080/orders?created_after=2019-09-26&amp;created_before=2019-09-25' -i -X GET \
+    -H 'Accept: application/json'</code></pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_example_response_8"><a class="link" href="#_example_response_8">Example response</a></h5>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">HTTP/1.1 200 OK
+Content-Type: application/json;charset=UTF-8
+Content-Length: 3
+
+[ ]</code></pre>
+</div>
 </div>
 </div>
 </div>
@@ -1123,7 +1280,7 @@ Must have at most 7 integral digits and 2 fractional digits.</p></td>
 </table>
 </div>
 <div class="sect3">
-<h4 id="_example_request_5"><a class="link" href="#_example_request_5">Example request</a></h4>
+<h4 id="_example_request_9"><a class="link" href="#_example_request_9">Example request</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ curl 'http://localhost:8080/orders' -i -X POST \
@@ -1134,7 +1291,7 @@ Must have at most 7 integral digits and 2 fractional digits.</p></td>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_example_response_5"><a class="link" href="#_example_response_5">Example response</a></h4>
+<h4 id="_example_response_9"><a class="link" href="#_example_response_9">Example response</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">HTTP/1.1 201 Created
@@ -1152,8 +1309,99 @@ Content-Type: application/json;charset=UTF-8
     "price" : 100.54
   } ],
   "totalPrice" : 101.54,
-  "placedAt" : "2019-09-25T14:28:50.379"
+  "placedAt" : "2019-09-25T22:28:26.153"
 }</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_invalid_order_creation_wrong_product_ids"><a class="link" href="#_invalid_order_creation_wrong_product_ids">Invalid order creation (wrong product ids)</a></h4>
+<div class="sect4">
+<h5 id="_example_request_10"><a class="link" href="#_example_request_10">Example request</a></h5>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ curl 'http://localhost:8080/orders' -i -X POST \
+    -H 'Accept: application/json' \
+    -H 'Content-Type: application/json;charset=utf-8' \
+    -d '{"buyer":"valid@email.com","productIds":[4,111]}'</code></pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_example_response_10"><a class="link" href="#_example_response_10">Example response</a></h5>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">HTTP/1.1 404 Not Found
+Content-Length: 105
+Content-Type: application/json;charset=UTF-8
+
+{
+  "timestamp" : "2019-09-25T19:28:25.721+0000",
+  "message" : "Unable to find Product with id 111"
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_invalid_order_creation_without_buyer_email"><a class="link" href="#_invalid_order_creation_without_buyer_email">Invalid order creation (without buyer email)</a></h4>
+<div class="sect4">
+<h5 id="_example_request_11"><a class="link" href="#_example_request_11">Example request</a></h5>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ curl 'http://localhost:8080/orders' -i -X POST \
+    -H 'Accept: application/json' \
+    -H 'Content-Type: application/json;charset=utf-8' \
+    -d '{"buyer":null,"productIds":[17,18]}'</code></pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_example_response_11"><a class="link" href="#_example_response_11">Example response</a></h5>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">HTTP/1.1 400 Bad Request
+Content-Type: application/json;charset=UTF-8
+Content-Length: 129
+
+{
+  "timestamp" : "2019-09-25T19:28:26.428+0000",
+  "errors" : {
+    "buyer" : "Please provide the email of the buyer"
+  }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_invalid_order_creation_no_products"><a class="link" href="#_invalid_order_creation_no_products">Invalid order creation (no products)</a></h4>
+<div class="sect4">
+<h5 id="_example_request_12"><a class="link" href="#_example_request_12">Example request</a></h5>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ curl 'http://localhost:8080/orders' -i -X POST \
+    -H 'Accept: application/json' \
+    -H 'Content-Type: application/json;charset=utf-8' \
+    -d '{"buyer":"valid@email.com","productIds":null}'</code></pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_example_response_12"><a class="link" href="#_example_response_12">Example response</a></h5>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">HTTP/1.1 400 Bad Request
+Content-Length: 139
+Content-Type: application/json;charset=UTF-8
+
+{
+  "timestamp" : "2019-09-25T19:28:26.591+0000",
+  "errors" : {
+    "productIds" : "Please provide the products for this order"
+  }
+}</code></pre>
+</div>
 </div>
 </div>
 </div>
@@ -1161,7 +1409,7 @@ Content-Type: application/json;charset=UTF-8
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2019-09-25 13:23:20 +0300
+Last updated 2019-09-25 22:27:37 +0300
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.13.1/styles/github.min.css">
