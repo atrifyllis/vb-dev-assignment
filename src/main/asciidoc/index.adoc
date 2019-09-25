@@ -1,12 +1,3 @@
-= Dev Assignment Documentation
-:doctype: book
-:icons: font
-:source-highlighter: highlightjs
-:toc: left
-:toc-title: Index
-:toclevels: 4
-:sectlinks:
-
 
 ifndef::snippets[]
 :snippets: ../../../target/generated-snippets
@@ -16,5 +7,5 @@ endif::[]
 include::{snippets}/product-controller-test//should-return-product-list/auto-section.adoc[]
 include::{snippets}/product-controller-test//should-create-product/auto-section.adoc[]
 include::{snippets}/product-controller-test//should-update-product-price/auto-section.adoc[]
-include::{snippets}/order-controller-test/should-return-order-list/auto-section.adoc[]
+include::{snippets}/order-controller-test/should-return-order-list-when-in-range/auto-section.adoc[]
 include::{snippets}/order-controller-test/should-create-order/auto-section.adoc[]

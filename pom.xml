@@ -155,23 +155,6 @@
                             </resources>
                         </configuration>
                     </execution>
-                    <!-- Needed for Docker for Windows. Otherwise Dockerfile is not found -->
-                    <execution>
-                        <id>copy-docker-resources</id>
-                        <phase>prepare-package</phase>
-                        <goals>
-                            <goal>copy-resources</goal>
-                        </goals>
-                        <configuration>
-                            <outputDirectory>${project.basedir}</outputDirectory>
-                            <resources>
-                                <resource>
-                                    <directory>${project.basedir}/src/main/docker</directory>
-                                    <filtering>false</filtering>
-                                </resource>
-                            </resources>
-                        </configuration>
-                    </execution>
                 </executions>
             </plugin>
 

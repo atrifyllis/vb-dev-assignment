@@ -20,7 +20,10 @@ public class OrderController {
     }
 
     /**
-     * Retrieve all orders.
+     *  Retrieve the list of orders within a given period (or all orders if no period is provided).
+     *
+     * @param createdBefore retrieve orders before this date (inclusive).
+     * @param createdAfter retrieve orders after this date (inclusive).
      *
      * @return the list of order details together with its product details.
      */
@@ -35,7 +38,6 @@ public class OrderController {
                         this.orderService.findAll()
         );
     }
-
 
     /**
      * Creates a new order.

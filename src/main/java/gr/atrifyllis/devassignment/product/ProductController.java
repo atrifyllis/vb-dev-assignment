@@ -41,6 +41,7 @@ class ProductController {
     /**
      * Updates an existing product.
      *
+     * @param id the database id of the product to update.
      * @param product the product details that.
      * @return the created product.
      */
