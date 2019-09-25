@@ -1,10 +1,12 @@
 package gr.atrifyllis.devassignment.order;
 
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -23,8 +25,15 @@ public class OrderController {
      * @return the list of order details together with its product details.
      */
     @GetMapping
-    public ResponseEntity<List<PlacedOrderResponseDto>> getOrders() {
-        return ResponseEntity.ok().body(this.orderService.findAll());
+    public ResponseEntity<List<PlacedOrderResponseDto>> getOrders(
+            @RequestParam(required = false, name = "created_before") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate createdBefore,
+            @RequestParam(required = false, name = "created_after") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate createdAfter
+    ) {
+        return ResponseEntity.ok().body(
+                createdBefore != null && createdAfter != null ?
+                        this.orderService.findAll(createdBefore, createdAfter) :
+                        this.orderService.findAll()
+        );
     }
 
 

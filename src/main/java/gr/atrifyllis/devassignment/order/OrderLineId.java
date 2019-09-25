@@ -10,8 +10,7 @@ import java.util.Objects;
 @Embeddable
 @Getter
 @Setter
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
-@AllArgsConstructor
+@NoArgsConstructor
 public class OrderLineId implements Serializable {
 
     @Column

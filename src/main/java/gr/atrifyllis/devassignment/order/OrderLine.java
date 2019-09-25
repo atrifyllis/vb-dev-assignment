@@ -39,6 +39,6 @@ public class OrderLine {
         this.order = order;
         this.product = product;
         this.price = product.getCurrentPrice();
-        this.id = new OrderLineId(order.getId(), product.getId());
+        this.id = new OrderLineId();
     }
 }

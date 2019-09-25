@@ -13,6 +13,8 @@ import org.springframework.http.MediaType;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -23,8 +25,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 // tests won't emulate production behavior without transactional annotation and will fail
 @Transactional
@@ -59,6 +60,35 @@ public class OrderControllerTest extends MockMvcBase {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].buyer", is("valid@email.com")))
                 .andExpect(jsonPath("$[0].totalPrice", is(101.54)));
+    }
+
+    @Test
+    public void shouldReturnOrderListWhenInRange() throws Exception {
+        String after = LocalDate.now().minusDays(1).format(DateTimeFormatter.ISO_DATE);
+        String before = LocalDate.now().plusDays(1).format(DateTimeFormatter.ISO_DATE);
+        this.mockMvc
+                .perform(get("/orders", LocalDate.of(2019, 9, 25))
+                        .param("created_after", after)
+                        .param("created_before", before)
+                        .accept(APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].buyer", is("valid@email.com")))
+                .andExpect(jsonPath("$[0].totalPrice", is(101.54)));
+    }
+
+    @Test
+    public void shouldReturnEmptyListWhenOutOfRange() throws Exception {
+        String after = LocalDate.now().plusDays(1).format(DateTimeFormatter.ISO_DATE);
+        String before = LocalDate.now().format(DateTimeFormatter.ISO_DATE);
+        this.mockMvc
+                .perform(get("/orders", LocalDate.of(2019, 9, 25))
+                        .param("created_after", after)
+                        .param("created_before", before)
+                        .accept(APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().string("[]"));
     }
 
     @Test

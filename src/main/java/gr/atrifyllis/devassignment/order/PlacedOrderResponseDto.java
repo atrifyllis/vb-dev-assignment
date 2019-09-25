@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static gr.atrifyllis.devassignment.product.ProductDto.convertOrderLinetoProductDto;
@@ -30,12 +31,18 @@ class PlacedOrderResponseDto {
      */
     private BigDecimal totalPrice;
 
+    /**
+     * The timestamp when the order has been placed.
+     */
+    private LocalDateTime placedAt;
+
     static PlacedOrderResponseDto convertToDto(PlacedOrder o) {
         return PlacedOrderResponseDto.builder()
                 .id(o.getId())
                 .buyer(o.getBuyer())
                 .lineProducts(o.getProducts().stream().map(convertOrderLinetoProductDto()).collect(toList()))
                 .totalPrice(calculateTotalOrderPrice(o.getProducts()))
+                .placedAt(o.getPlacedAt())
                 .build();
     }
 

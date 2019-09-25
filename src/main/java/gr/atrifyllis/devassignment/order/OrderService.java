@@ -5,6 +5,7 @@ import gr.atrifyllis.devassignment.product.ProductRepository;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -42,4 +43,9 @@ class OrderService {
         return PlacedOrderResponseDto.convertToDto(this.orderRepository.save(new PlacedOrder(o.getBuyer(), LocalDateTime.now(), persistedProducts)));
     }
 
+    List<PlacedOrderResponseDto> findAll(LocalDate createdBefore, LocalDate createdAfter) {
+        return this.orderRepository.findByPlacedAtBetween(createdAfter.atStartOfDay(), createdBefore.atTime(23, 59)).stream()
+                .map(PlacedOrderResponseDto::convertToDto)
+                .collect(toList());
+    }
 }
