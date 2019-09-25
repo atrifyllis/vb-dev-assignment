@@ -22,7 +22,7 @@ public class Product {
      */
     @Id
     @GeneratedValue
-    @Setter(AccessLevel.NONE)
+    @Setter(AccessLevel.PROTECTED)
     private Long id;
 
     /**

@@ -16,8 +16,10 @@ import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static gr.atrifyllis.devassignment.order.OrderSampleCreator.getOrder;
+import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
 
 
@@ -34,7 +36,6 @@ public class OrderRepositoryTest extends JpaTestBase {
 
     @Before
     public void setUp() {
-        cleanUpDatabase();
         productRepository.saveAll(ProductSampleCreator.getTwoProducts());
         persistedProducts = productRepository.findAll();
 
@@ -70,7 +71,11 @@ public class OrderRepositoryTest extends JpaTestBase {
     @Test
     public void shouldNotAffectOrderPriceWhenUpdatingProductPrice() {
         PlacedOrder persistedOrder = orderRepository.saveAndFlush(getOrder(persistedProducts)); // flush to make sure the order is saved
-        BigDecimal oldOrderPrice = PlacedOrderResponseDto.calculateTotalOrderPrice(persistedOrder.getProducts());
+        BigDecimal oldOrderPrice = PlacedOrderResponseDto.calculateTotalOrderPrice(
+                persistedOrder.getProducts().stream()
+                        .map(OrderLine::getPrice)
+                        .collect(toList())
+        );
         // update product price
         Product firstOrderProduct = persistedProducts.stream().findFirst().orElseThrow(IllegalStateException::new);
         firstOrderProduct.setCurrentPrice(firstOrderProduct.getCurrentPrice().add(BigDecimal.ONE));
@@ -78,7 +83,11 @@ public class OrderRepositoryTest extends JpaTestBase {
 
         PlacedOrder updatedOrder = orderRepository.findById(persistedOrder.getId()).orElseThrow(IllegalStateException::new);
         // check that order price has not changed
-        assertThat(PlacedOrderResponseDto.calculateTotalOrderPrice(updatedOrder.getProducts())).isEqualTo(oldOrderPrice);
+        assertThat(PlacedOrderResponseDto.calculateTotalOrderPrice(
+                updatedOrder.getProducts().stream()
+                        .map(OrderLine::getPrice)
+                        .collect(toList()))
+        ).isEqualTo(oldOrderPrice);
     }
 
 
