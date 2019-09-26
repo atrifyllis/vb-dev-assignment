@@ -13,10 +13,10 @@ import org.springframework.test.jdbc.JdbcTestUtils;
 import javax.annotation.PostConstruct;
 import javax.sql.DataSource;
 import java.math.BigDecimal;
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static gr.atrifyllis.devassignment.order.OrderSampleCreator.getOrder;
 import static java.util.stream.Collectors.toList;
@@ -88,12 +88,5 @@ public class OrderRepositoryTest extends JpaTestBase {
                         .map(OrderLine::getPrice)
                         .collect(toList()))
         ).isEqualTo(oldOrderPrice);
-    }
-
-
-    @PostConstruct
-    private void dataSourceInfo() throws SQLException {
-        DataSource ds = context.getBean(DataSource.class);
-        System.out.println(ds.getConnection().toString());
     }
 }

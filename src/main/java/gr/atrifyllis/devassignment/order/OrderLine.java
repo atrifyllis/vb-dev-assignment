@@ -19,7 +19,7 @@ import java.math.BigDecimal;
 @Setter
 @EqualsAndHashCode
 @NoArgsConstructor
-public class OrderLine {
+class OrderLine {
 
     @EmbeddedId
     private OrderLineId id;

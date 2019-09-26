@@ -1,6 +1,5 @@
 package gr.atrifyllis.devassignment.product;
 
-import gr.atrifyllis.devassignment.order.OrderLine;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -11,7 +10,6 @@ import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
-import java.util.function.Function;
 
 /**
  * Used both as a DTO for Product creation and for the representation of a Line Product.

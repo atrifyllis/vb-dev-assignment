@@ -33,9 +33,9 @@ public class OrderController {
             @RequestParam(required = false, name = "created_after") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate createdAfter
     ) {
         return ResponseEntity.ok().body(
-                createdBefore != null && createdAfter != null ?
-                        this.orderService.findAll(createdBefore, createdAfter) :
-                        this.orderService.findAll()
+                createdBefore != null && createdAfter != null
+                        ? this.orderService.findAll(createdBefore, createdAfter)
+                        : this.orderService.findAll()
         );
     }
 

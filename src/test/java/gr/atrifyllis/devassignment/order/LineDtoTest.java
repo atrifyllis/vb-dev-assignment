@@ -1,7 +1,6 @@
 package gr.atrifyllis.devassignment.order;
 
 import gr.atrifyllis.devassignment.product.Product;
-import gr.atrifyllis.devassignment.product.ProductDto;
 import gr.atrifyllis.devassignment.product.ProductSampleCreator;
 import org.junit.Test;
 
