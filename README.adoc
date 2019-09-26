@@ -7,6 +7,32 @@
 :toclevels: 4
 :sectlinks:
 
+== Introduction
+
+This is a Spring Boot Application implementing the REST API as required.
+
+=== Storage
+
+Spring Data JPA/Hibernate is used in the persistence layer.
+H2 is used as a storage mechanism in development mode.
+MySQL is used in production mode (Docker).
+
+=== Docker
+
+Docker is used for running the application. The maven-dependency-plugin is used to unpack the jar in directories.
+The link:Dockerfile[Dockerfile] reflects this separation using separate COPY steps. This way we manage to create a multilayer Docker image
+and on subsequent builds only the layer that has changed is rebuilt (that is the application classes).
+
+link:docker-compose.yml[Docker compose] is used to setup the Docker environment for our application.
+It creates two services, one for the Java application and one with a MySQL database. Furthermore, a volume is created on the
+MySQL service so that the state of the application is persisted between restarts.
+
+=== Api Docs
+
+The API documentation is generated using a combination of Spring REST Docs and link:https://github.com/ScaCap/spring-auto-restdocs[Spring Auto REST Docs]
+This is crucial because the documentation is generated using the integration tests. If the tests change, the documentation is
+generated again (on build time) and the changes are reflected in the docs.
+
 == Local development
 
 To run this application in development mode you need Java 8+ installed.
@@ -19,14 +45,15 @@ This will start the Spring Boot application locally (with an H2 embedded databas
 
 To run this application in "production" mode you need to have Docker (and Docker Compose) installed.
 
-Run `mvn clean install -Pdocker`
+Run `./mvnw clean install -Pdocker`
 
 This will build the application, run tests and build a local Docker image (namely `atrifyllis/dev-assignment`).
 
 Run `docker-compose up`
 
 This will run the application image in a Docker container and also start a MySQL database in a Docker container.
-Data is persisted in the database between restarts.
+
+NOTE: Data is persisted in the database between restarts (persistent volume).
 
 == Using the API
 
@@ -37,9 +64,9 @@ The root URL for the API is:
 
 You can import the Postman scripts included in the repository:
 
-* import the Postman environment file (optional): link:docker.postman_environment.json[]] (you might need to change the `host` variable to your `DOCKER_HOST IP`.
+* (optional) for development: import the Postman environment file: link:local.postman_environment.json][]
+* (optional) for docker: import the Postman environment file: link:docker.postman_environment.json[]] (you might need to change the `host` variable to your `DOCKER_HOST IP`.
 It is set to 192.168.99.100 which is the default DOCKER_HOST IP on a docker-machine in Windows)
-* import the Postman environment file (optional): link:local.postman_environment.json][]
 * import the Postman collection file: link:vb-assignment.postman_collection.json][]
 
 == API Documentation
@@ -61,20 +88,25 @@ This could be implemented either:
 
 === Redundancy
 
+==== Application Redundancy
 The first step for service redundancy is to deploy *multiple instances* of the Spring Boot app.
-This will require some infrastructure.
-Specifically, it requires some kind of a container orchestrator.
-At the moment, the most popular container orchestrator is *Kubernetes*.
-There is a Maven plugin which can easily generated a Kubernetes yaml for our Spring boot application (`fabric8-maven-plugin`).
+This will require some additional infrastructure. Specifically, it requires some kind of a container orchestrator.
+At the moment, the most popular container orchestrator is *Kubernetes*. The easiest way to start with Kubernetes is to use
+a Kubernetes Cloud Provider (e.g. AWS, GCE, Azure etc.).
+Concerning our application, there is a Maven plugin which can easily generate a Kubernetes yaml for our Spring boot application (`fabric8-maven-plugin`).
 This way we can create a Kubernetes deployment, specify the number of replicas (for example 3) and deploy our service in a Kubernetes cluster.
 There is also need for some kind of external load balancing to be able to access our service instances (e.g. EKS/GKE etc. provide load balancing as a service).
+Kubernetes handles the redundancy of our service keeping the number of replicas constant.
 
+==== Data redundancy
 The next step has to do with the redundancy of the *persistence* mechanism .
-This is similar to the service redundancy but with an important difference: we need stateful replication instead of a stateless replication.
-One way to deal with this problem in Kubernetes is using `StatefulSets`.
-A Mysql cluster must be deployed in a Kubernetes cluster (master/slave topology).
+This is similar to the application redundancy but with an important difference: we need stateful replication instead of a stateless replication.
+One way to deal with this problem in Kubernetes is using `StatefulSets`. A Mysql cluster must be deployed in a Kubernetes cluster (master/slave topology).
 This is a complex solution and requires a lot of configuration.
-In EKS specifically we could consider an *alternative* solution:
-We could use a cloud native storage solution (like Portworx) which will replicated the data (not the whole db).
-This way we have an easier deployment (only one MySQL instance) and we can achieve redundancy by replicating the data only.
-We might get *some* down time in case of a Pod failure, but data redundancy is handled automatically by Portworx and a new Pod will be started automatically by Kubernetes on a node where the storage is replicated.
+
+When using a Cloud Provider specifically we could consider an *alternative* solution:
+
+We could use a cloud native storage solution (e.g. Portworx, Longhorn etc.) which will replicate the data (not the whole db).
+This way we have a very simple deployment (only one MySQL instance) and we can achieve redundancy by replicating the data only.
+We might get *some* down time in case of a Pod failure, but data redundancy is handled automatically by the storage solution
+and a new Pod will be started automatically by Kubernetes on a node where the storage is replicated (no data will be lost).
