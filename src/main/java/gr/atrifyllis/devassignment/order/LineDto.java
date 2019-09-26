@@ -1,6 +1,5 @@
-package gr.atrifyllis.devassignment.product;
+package gr.atrifyllis.devassignment.order;
 
-import gr.atrifyllis.devassignment.order.OrderLine;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -20,18 +19,21 @@ import java.util.function.Function;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public
-class ProductDto {
+class LineDto {
     /**
      * The name of the product.
      */
-    @NotEmpty(message = "Please provide a name for the product")
-    String name;
+       String name;
     /**
      * The price of the product.
      */
-    @NotNull(message = "Please provide a price for the product")
-    @DecimalMin("1.00")
-    @Digits(integer = 7, fraction = 2)
-    BigDecimal price;
+      BigDecimal price;
+
+    public static Function<OrderLine, LineDto> convertOrderLinetoProductDto() {
+        return p -> LineDto.builder()
+                .price(p.getPrice())
+                .name(p.getProduct().getName())
+                .build();
+    }
+
 }

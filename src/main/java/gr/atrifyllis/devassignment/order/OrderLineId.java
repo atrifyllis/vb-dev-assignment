@@ -12,7 +12,7 @@ import java.util.Objects;
 @Setter
 @NoArgsConstructor
 @EqualsAndHashCode
-public class OrderLineId implements Serializable {
+class OrderLineId implements Serializable {
 
     @Column
     private Long orderId;

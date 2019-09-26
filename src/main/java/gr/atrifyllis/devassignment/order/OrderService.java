@@ -22,8 +22,27 @@ class OrderService {
         this.productRepository = productRepository;
     }
 
+    /**
+     * Retrieve list of all Orders.
+     *
+     * @return the list of Orders.
+     */
     List<PlacedOrderResponseDto> findAll() {
         return this.orderRepository.findAll().stream()
+                .map(PlacedOrderResponseDto::convertToDto)
+                .collect(toList());
+    }
+
+    /**
+     * Retrieve list of Orders inside Date range.
+     *
+     * @param createdBefore upper bound of range.
+     * @param createdAfter  lower bound of range.
+     * @return the list of Orders.
+     */
+    List<PlacedOrderResponseDto> findAll(LocalDate createdBefore, LocalDate createdAfter) {
+        return this.orderRepository
+                .findByPlacedAtBetween(createdAfter.atStartOfDay(), createdBefore.atTime(23, 59)).stream()
                 .map(PlacedOrderResponseDto::convertToDto)
                 .collect(toList());
     }
@@ -34,18 +53,15 @@ class OrderService {
      *
      * @param o the new order details
      * @return the saved order details
+     * @throws EntityNotFoundException if one of the Products is not found in the database.
      */
     PlacedOrderResponseDto create(OrderDto o) {
         List<Product> persistedProducts = o.productIds.stream()
                 .map(pId -> this.productRepository.findById(pId)
                         .orElseThrow(() -> new EntityNotFoundException("Unable to find Product with id " + pId)))
                 .collect(toList());
-        return PlacedOrderResponseDto.convertToDto(this.orderRepository.save(new PlacedOrder(o.getBuyer(), LocalDateTime.now(), persistedProducts)));
+        PlacedOrder savedOrder = this.orderRepository.save(new PlacedOrder(o.getBuyer(), LocalDateTime.now(), persistedProducts));
+        return PlacedOrderResponseDto.convertToDto(savedOrder);
     }
 
-    List<PlacedOrderResponseDto> findAll(LocalDate createdBefore, LocalDate createdAfter) {
-        return this.orderRepository.findByPlacedAtBetween(createdAfter.atStartOfDay(), createdBefore.atTime(23, 59)).stream()
-                .map(PlacedOrderResponseDto::convertToDto)
-                .collect(toList());
-    }
 }
